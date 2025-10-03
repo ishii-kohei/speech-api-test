@@ -1,0 +1,43 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>音声認識テスト</title>
+</head>
+<body>
+  <h1>音声認識テスト</h1>
+  <button id="start">音声認識開始</button>
+  <p id="result">ここに認識結果が表示されます</p>
+
+  <script>
+    const startBtn = document.getElementById('start');
+    const resultText = document.getElementById('result');
+
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+    if (!SpeechRecognition) {
+      resultText.textContent = "このブラウザはWeb Speech APIをサポートしていません。";
+    } else {
+      const recognition = new SpeechRecognition();
+      recognition.lang = 'ja-JP';
+      recognition.interimResults = false;
+      recognition.continuous = false;
+
+      recognition.onresult = (event) => {
+        const transcript = event.results[0][0].transcript;
+        resultText.textContent = `認識結果: ${transcript}`;
+      };
+
+      recognition.onerror = (event) => {
+        resultText.textContent = `エラー: ${event.error}`;
+      };
+
+      startBtn.onclick = () => {
+        recognition.start();
+        resultText.textContent = "認識中...";
+      };
+    }
+  </script>
+</body>
+</html>
